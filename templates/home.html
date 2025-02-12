@@ -13,18 +13,19 @@
                 <span class="logo-icon">💬</span> Micro-blog
             </h1>
             <div>
+                <nav class="nav">
+                    <a href="#" class="nav-link">Recent</a>
+                    <a href="#" class="nav-link">Calendar</a>
+                
                 <button id="themeToggle" class="theme-button">🌙</button>
+                </nav>
             </div>
         </header>
 
-        <nav class="nav">
-            <a href="#" class="nav-link">Recent</a>
-            <a href="#" class="nav-link">Calendar</a>
-        </nav>
 
         <form  class="new-entry" method="post" action="/entry">
             <h2>Add new entry</h2>
-            <label>
+            <label for="entry-text">
                 <textarea class="entry-text" placeholder="Write something..."></textarea>
             </label>
             <button class="entry-button">Add entry</button>
