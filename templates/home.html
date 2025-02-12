@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Micro-blog</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">
+                <span class="logo-icon">💬</span> Micro-blog
+            </h1>
+            <div>
+                <button id="themeToggle" class="theme-button">🌙</button>
+            </div>
+        </header>
+
+        <nav class="nav">
+            <a href="#" class="nav-link">Recent</a>
+            <a href="#" class="nav-link">Calendar</a>
+        </nav>
+
+        <form  class="new-entry" method="post" action="/entry">
+            <h2>Add new entry</h2>
+            <label>
+                <textarea class="entry-text" placeholder="Write something..."></textarea>
+            </label>
+            <button class="entry-button">Add entry</button>
+        </form>
+
+        <section class="recent-posts">
+            <h2>Recent posts</h2>
+            <div class="post">
+                <h3>A bit of a chill day today <span class="post-date">• Oct 24</span></h3>
+                <p>Today I couldn't do much programming, but that’s OK! Can't be too awesome every day now!</p>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <p>Made by Mesfin's boy</p>
+        <nav class="footer-nav">
+            <a href="#" class="footer-link">Recent</a>
+            <a href="#" class="footer-link">Calendar</a>
+            <a href="#" class="footer-link">About</a>
+        </nav>
+    </footer>
+
+    <script>
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            this.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        });
+    </script>
+</body>
+</html>
