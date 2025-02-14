@@ -8,3 +8,4 @@ class PostModel(db.Model):
     content = db.Column(db.String, nullable=False)
     posted_date = db.Column(db.Date, nullable=False)
     updated_date = db.Column(db.Date, nullable=True)
+    comments = db.relationship("CommentModel", back_populates="posts", lazy="dynamic")
