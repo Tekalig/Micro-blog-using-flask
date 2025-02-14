@@ -1,5 +1,5 @@
 import datetime
-
+from flask import render_template
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
@@ -10,6 +10,13 @@ from models.post import PostModel
 from schemas import PostSchema, UpdatePostSchema, PlainCommentSchema
 
 post_blueprint = Blueprint("post", __name__, description="Operation on posts")
+
+@post_blueprint.route("/")
+class Home(MethodView):
+    # get all posts
+    def get(self):
+        posts = PostModel.query.all()
+        return render_template("home.html", posts=posts)
 
 @post_blueprint.route("/posts/")
 class Post(MethodView):
