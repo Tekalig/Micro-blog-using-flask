@@ -1,3 +1,5 @@
+import datetime
+
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
@@ -21,7 +23,8 @@ class Post(MethodView):
     @post_blueprint.arguments(PlainPostSchema)
     @post_blueprint.response(201,PlainPostSchema)
     def post(self, post_data):
-        post = PostModel(**post_data)
+        date = datetime.datetime.now().strftime("%Y-%m-%d")
+        post = PostModel(**post_data, posted_date=date)
         try:
             db.session.add(post)
             db.session.commit()
@@ -32,7 +35,7 @@ class Post(MethodView):
 
         return post
 
-@post_blueprint.route("/post/<int:post_id")
+@post_blueprint.route("/post/<int:post_id>/")
 class PostById(MethodView):
     # get specific post by id
     @post_blueprint.response(200,PlainPostSchema)
@@ -45,9 +48,17 @@ class PostById(MethodView):
     @post_blueprint.arguments(UpdatePostSchema)
     @post_blueprint.response(201, PlainPostSchema)
     def put(self, post_data, post_id):
-        post = PostModel.query.get_or_404(post_id)
-        post |= post_data
+        post = PostModel.query.get(post_id)
+        update_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        print(post)
         try:
+            if post:
+                post.title = post_data["title"] if "title" in post_data else post.title
+                post.content = post_data["content"] if "content" in post_data else post.content
+                post.updated_date = update_date
+            else:
+                post = PostModel(id=post_id, **post_data, posted_date=update_date)
+
             db.session.add(post)
             db.session.commit()
         except IntegrityError as i:
@@ -63,7 +74,7 @@ class PostById(MethodView):
         post = PostModel.query.get_or_404(post_id)
 
         try:
-            db.session.delete()
+            db.session.delete(post)
             db.session.commit()
         except SQLAlchemyError as s:
             abort(500, message=str(s))
