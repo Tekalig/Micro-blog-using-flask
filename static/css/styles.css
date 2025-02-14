@@ -56,16 +56,31 @@ body {
     justify-content: center;
 }
 
-label {
+.new-post {
     padding-right: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    font-weight: bold;
 }
 
-.entry-text {
+
+
+.content {
     width: 100%;
     height: 80px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;   
+}
+
+#title {
+    width: 100%;
+        height: 30px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
 }
 
 .entry-button {
@@ -88,6 +103,26 @@ label {
 .post {
     padding: 15px;
     border-bottom: 1px solid #ddd;
+}
+
+#comment {
+    width: 83%;
+    height: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.comment-button {
+    width: 120px;
+    font-size: larger;
+    background-color: #def705;
+    color: black;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 20px;
 }
 
 .footer {
@@ -135,7 +170,7 @@ label {
     color: #007bff;
 }
 
-.dark-mode .entry-text {
+.dark-mode .content, .dark-mode #title, .dark-mode #comment{
     background-color: #666;
     color: white;
     border: 1px solid #888;
