@@ -7,21 +7,21 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 # import custom modules
 from config.db import db
 from models.post import PostModel
-from schemas import PlainPostSchema, UpdatePostSchema
+from schemas import PostSchema, UpdatePostSchema
 
 post_blueprint = Blueprint("post", __name__, description="Operation on posts")
 
 @post_blueprint.route("/posts/")
 class Post(MethodView):
     # get all posts
-    @post_blueprint.response(200, PlainPostSchema(many=True))
+    @post_blueprint.response(200, PostSchema(many=True))
     def get(self):
         posts = PostModel.query.all()
         return posts
 
     # create new post
-    @post_blueprint.arguments(PlainPostSchema)
-    @post_blueprint.response(201,PlainPostSchema)
+    @post_blueprint.arguments(PostSchema)
+    @post_blueprint.response(201,PostSchema)
     def post(self, post_data):
         date = datetime.datetime.now().strftime("%Y-%m-%d")
         post = PostModel(**post_data, posted_date=date)
@@ -38,7 +38,7 @@ class Post(MethodView):
 @post_blueprint.route("/post/<int:post_id>/")
 class PostById(MethodView):
     # get specific post by id
-    @post_blueprint.response(200,PlainPostSchema)
+    @post_blueprint.response(200,PostSchema)
     def get(self, post_id):
         post = PostModel.query.get_or_404(post_id)
 
@@ -46,7 +46,7 @@ class PostById(MethodView):
 
     # update specific post by id
     @post_blueprint.arguments(UpdatePostSchema)
-    @post_blueprint.response(201, PlainPostSchema)
+    @post_blueprint.response(201, PostSchema)
     def put(self, post_data, post_id):
         post = PostModel.query.get(post_id)
         updated_date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -69,7 +69,7 @@ class PostById(MethodView):
         return post
 
     # delete specific post by it id
-    @post_blueprint.response(200, PlainPostSchema)
+    @post_blueprint.response(200, PostSchema)
     def delete(self, post_id):
         post = PostModel.query.get_or_404(post_id)
 
