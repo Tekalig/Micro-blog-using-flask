@@ -49,15 +49,15 @@ class PostById(MethodView):
     @post_blueprint.response(201, PlainPostSchema)
     def put(self, post_data, post_id):
         post = PostModel.query.get(post_id)
-        update_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        updated_date = datetime.datetime.now().strftime("%Y-%m-%d")
         print(post)
         try:
             if post:
                 post.title = post_data["title"] if "title" in post_data else post.title
                 post.content = post_data["content"] if "content" in post_data else post.content
-                post.updated_date = update_date
+                post.updated_date = updated_date
             else:
-                post = PostModel(id=post_id, **post_data, posted_date=update_date)
+                post = PostModel(id=post_id, **post_data, posted_date=updated_date)
 
             db.session.add(post)
             db.session.commit()
