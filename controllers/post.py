@@ -7,7 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 # import custom modules
 from config.db import db
 from models.post import PostModel
-from schemas import PostSchema, UpdatePostSchema
+from schemas import PostSchema, UpdatePostSchema, PlainCommentSchema
 
 post_blueprint = Blueprint("post", __name__, description="Operation on posts")
 
@@ -80,3 +80,11 @@ class PostById(MethodView):
             abort(500, message=str(s))
 
         return {"message":"Post deleted successfully"}
+
+@post_blueprint.route("/post/<int:post_id>/comments")
+class CommentByPostId(MethodView):
+    # get all posts
+    @post_blueprint.response(200, PlainCommentSchema(many=True))
+    def get(self, post_id):
+        post = PostModel.query.get_or_404(post_id)
+        return post.comments
