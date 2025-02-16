@@ -6,3 +6,4 @@ flask-sqlalchemy
 psycopg2
 flask
 gunicorn
+flask_jwt_extended
