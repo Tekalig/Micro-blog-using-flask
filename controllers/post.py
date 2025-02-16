@@ -1,5 +1,5 @@
 import datetime
-
+from flask import render_template
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
@@ -7,21 +7,28 @@ from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 # import custom modules
 from config.db import db
 from models.post import PostModel
-from schemas import PlainPostSchema, UpdatePostSchema
+from schemas import PostSchema, UpdatePostSchema, PlainCommentSchema
 
 post_blueprint = Blueprint("post", __name__, description="Operation on posts")
+
+@post_blueprint.route("/")
+class Home(MethodView):
+    # get all posts
+    def get(self):
+        posts = PostModel.query.all()
+        return render_template("home.html", posts=posts)
 
 @post_blueprint.route("/posts/")
 class Post(MethodView):
     # get all posts
-    @post_blueprint.response(200, PlainPostSchema(many=True))
+    @post_blueprint.response(200, PostSchema(many=True))
     def get(self):
         posts = PostModel.query.all()
         return posts
 
     # create new post
-    @post_blueprint.arguments(PlainPostSchema)
-    @post_blueprint.response(201,PlainPostSchema)
+    @post_blueprint.arguments(PostSchema)
+    @post_blueprint.response(201,PostSchema)
     def post(self, post_data):
         date = datetime.datetime.now().strftime("%Y-%m-%d")
         post = PostModel(**post_data, posted_date=date)
@@ -38,7 +45,7 @@ class Post(MethodView):
 @post_blueprint.route("/post/<int:post_id>/")
 class PostById(MethodView):
     # get specific post by id
-    @post_blueprint.response(200,PlainPostSchema)
+    @post_blueprint.response(200,PostSchema)
     def get(self, post_id):
         post = PostModel.query.get_or_404(post_id)
 
@@ -46,18 +53,18 @@ class PostById(MethodView):
 
     # update specific post by id
     @post_blueprint.arguments(UpdatePostSchema)
-    @post_blueprint.response(201, PlainPostSchema)
+    @post_blueprint.response(201, PostSchema)
     def put(self, post_data, post_id):
         post = PostModel.query.get(post_id)
-        update_date = datetime.datetime.now().strftime("%Y-%m-%d")
+        updated_date = datetime.datetime.now().strftime("%Y-%m-%d")
         print(post)
         try:
             if post:
                 post.title = post_data["title"] if "title" in post_data else post.title
                 post.content = post_data["content"] if "content" in post_data else post.content
-                post.updated_date = update_date
+                post.updated_date = updated_date
             else:
-                post = PostModel(id=post_id, **post_data, posted_date=update_date)
+                post = PostModel(id=post_id, **post_data, posted_date=updated_date)
 
             db.session.add(post)
             db.session.commit()
@@ -69,7 +76,7 @@ class PostById(MethodView):
         return post
 
     # delete specific post by it id
-    @post_blueprint.response(200, PlainPostSchema)
+    @post_blueprint.response(200, PostSchema)
     def delete(self, post_id):
         post = PostModel.query.get_or_404(post_id)
 
@@ -80,3 +87,11 @@ class PostById(MethodView):
             abort(500, message=str(s))
 
         return {"message":"Post deleted successfully"}
+
+@post_blueprint.route("/post/<int:post_id>/comments")
+class CommentByPostId(MethodView):
+    # get all posts
+    @post_blueprint.response(200, PlainCommentSchema(many=True))
+    def get(self, post_id):
+        post = PostModel.query.get_or_404(post_id)
+        return post.comments

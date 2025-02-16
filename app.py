@@ -6,6 +6,7 @@ from flask_smorest import Api
 
 # import custom blueprint
 from controllers.post import post_blueprint
+from controllers.comment import comment_blueprint
 # import database initial configuration
 from config.db import db
 
@@ -50,6 +51,7 @@ def create_app():
 
     # user blueprint route
     api.register_blueprint(post_blueprint)
+    api.register_blueprint(comment_blueprint)
 
     return app
 
