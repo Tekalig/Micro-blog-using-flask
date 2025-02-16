@@ -1,59 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Micro-blog</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
     <div class="container">
-        <header class="header">
-            <h1 class="logo">
-                <span class="logo-icon">💬</span> Micro-blog
-            </h1>
-            <div>
-                <nav class="nav">
-                    <a href="#recent-posts" class="nav-link">Recent</a>
-                    <a href="#" class="nav-link">Calendar</a>
-                
-                <button id="themeToggle" class="theme-button">🌙</button>
-                </nav>
-            </div>
-        </header>
+      <header class="header">
+        <h1 class="logo"><span class="logo-icon">💬</span> Micro-blog</h1>
+        <div>
+          <nav class="nav">
+            <a href="#recent-posts" class="nav-link">Recent</a>
+            <a href="#" class="nav-link">Calendar</a>
 
+            <button id="themeToggle" class="theme-button">🌙</button>
+          </nav>
+        </div>
+      </header>
 
-        <form  class="new-entry" method="post" action="/entry">
-            <h2>Add new entry</h2>
-            <label for="entry-text">
-                <textarea class="entry-text" placeholder="Write something..."></textarea>
+      <form class="new-entry" method="post" action="/posts">
+        <h2>Add new post</h2>
+        <div class="new-post">
+            
+            <label for="title">
+                Title: 
+            <input
+                id="title"
+                placeholder="Write title..."
+            />
             </label>
-            <button class="entry-button">Add entry</button>
-        </form>
+            <label for="content">
+                Describtion:
+            <textarea
+                class="content"
+                placeholder="Write something..."
+            ></textarea>
+            </label>
+        </div>
+        <button class="entry-button">Add post</button>
+      </form>
 
-        <section class="recent-posts" id="recent-posts">
-            <h2>Recent posts</h2>
-            <div class="post">
-                <h3>A bit of a chill day today <span class="post-date">• Oct 24</span></h3>
-                <p>Today I couldn't do much programming, but that’s OK! Can't be too awesome every day now!</p>
-            </div>
-        </section>
+      <section class="recent-posts" id="recent-posts">
+        <h2>Recent posts</h2>
+        {% for post in posts%}
+        <div class="post">
+          <h3>
+            {{post.title}} <span class="post-date">{{post.posted_date}}</span>
+          </h3>
+          <p>
+            {{post.content}}
+          </p>
+          <form class="new-comment" method="post", action="/comments">
+            <label for="comment">
+            <input
+                id="comment"
+                placeholder="Write comment..."
+            />
+            </label>
+            <button class="comment-button">Add comment</button>
+          </form>
+          {% for comment in post.comments%}
+          <p>
+            {{comment.comment}}
+          </p>
+          {%endfor%}
+        </div>
+        {% endfor %}
+      </section>
     </div>
 
     <footer class="footer">
-        <p>Made by Mesfin's boy</p>
-        <nav class="footer-nav">
-            <a href="#" class="footer-link">Recent</a>
-            <a href="#" class="footer-link">Calendar</a>
-            <a href="#" class="footer-link">About</a>
-        </nav>
+      <p>Made by Mesfin's boy</p>
+      <nav class="footer-nav">
+        <a href="#" class="footer-link">Recent</a>
+        <a href="#" class="footer-link">Calendar</a>
+        <a href="#" class="footer-link">About</a>
+      </nav>
     </footer>
 
     <script>
-        document.getElementById('themeToggle').addEventListener('click', function() {
-            document.body.classList.toggle('dark-mode');
-            this.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+      document
+        .getElementById("themeToggle")
+        .addEventListener("click", function () {
+          document.body.classList.toggle("dark-mode");
+          this.textContent = document.body.classList.contains("dark-mode")
+            ? "☀️"
+            : "🌙";
         });
     </script>
-</body>
+  </body>
 </html>
